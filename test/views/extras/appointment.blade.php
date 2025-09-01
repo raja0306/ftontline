@@ -1,0 +1,211 @@
+<!-- resources/views/labels/a4-template.blade.php -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>A4 Labels</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 9pt;
+        }
+        .label-sheet {
+            width: 210mm;
+            height: 297mm;
+            position: relative;
+/*            border: 0.1mm solid #ddd;*/
+            page-break-after: always;
+        }
+        .label-sheet2 {
+            /*margin-top: 6mm;
+            margin-bottom: 6mm;*/
+            page-break-after: auto;
+        }
+        .label {
+            position: absolute;
+            width: 105mm;
+            height: 57mm;
+            border-bottom: 0.1mm solid #ddd;
+            box-sizing: border-box;
+            overflow: hidden;
+            padding-bottom: 3mm;
+        }
+        .label-p1{
+            padding: 6mm 6mm;
+        }
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .label:nth-child(1) { top: 0mm; left: 0mm; }
+        .label:nth-child(2) { top: 0mm; left: 105mm; }
+        .label:nth-child(3) { top: 57mm; left: 0mm; }
+        .label:nth-child(4) { top: 57mm; left: 105mm; }
+        .label:nth-child(5) { top: 116mm; left: 0mm; }
+        .label:nth-child(6) { top: 116mm; left: 105mm; }
+        .label:nth-child(7) { top: 177mm; left: 0mm; }
+        .label:nth-child(8) { top: 177mm; left: 105mm; }
+        .label:nth-child(9) { top: 234mm; left: 0mm; }
+        .label:nth-child(10) { top: 234mm; left: 105mm; }
+
+        .customer-name{ font-weight: 600; }
+        .phone { text-align: right; }
+        .bg-grey{ background:#e5e5e5; }
+        .appointment-box{ border-top:1px solid #e5e5e5; }
+        .address-box{
+            border: 0.1mm dashed #999;
+            border-radius: 1mm;
+            padding: 1mm;
+            margin-top: 1mm;
+            font-size: 9pt;
+            height: 18mm;
+            overflow: hidden;
+        }
+        .addr-area{
+            font-size: 10pt;
+            font-weight: 600;
+        }
+        .w-33{ width: 33%; }
+        .w-40{ width: 40%; }
+        .w-20{ width: 33%; }
+        .w-50{ width: 50%; }
+        .w-25{ width: 25%; }
+    </style>
+</head>
+<body>
+    @php
+        $itemsPerPage = 10;
+        $totalPagess = ceil(count($labels) / $itemsPerPage);
+    @endphp
+    @for($pageIndex = 0; $pageIndex < $totalPagess; $pageIndex++)
+    <div class="label-sheet" style="page-break-after: always;">
+    <div class="label-sheet2">
+    @php
+        $startIndex = $pageIndex * $itemsPerPage;
+        $pageItems = array_slice($labels, $startIndex, $itemsPerPage);
+    @endphp
+    @foreach($pageItems as $label)
+        <div class="label">
+        <div class="label-p1">
+            <table class="header-table bg-grey" width="100%">
+                <tr>
+                    <td class="customer-name">{{ $label['name'] }}</td>
+                    <td class="phone">Ph: {{ $label['mobile'] }}</td>
+                </tr>
+            </table>
+            <table class="content-table" width="100%">
+                <tr>
+                    <td style="width:35%;">
+                        <span class="field-label">Barcode:</span><br>
+                        <span class="field-value">{{ $label['barcode'] }}</span>
+                    </td>
+                    <td style="width:40%;">
+                        <span class="field-label">Tray No:</span><br>
+                        <span class="field-value">{{ $label['tray_no'] }}</span>
+                    </td>
+                    <td style="width:25%;float: right;">
+                        <span class="field-label">Batch No:</span><br>
+                        <span class="field-value">{{ $label['batch_no'] }}</span>
+                    </td>
+                </tr>
+            </table>
+            @if($label['appointment'])
+            <div class="appointment-box" style="margin-bottom:5px;">
+                <table class="appointment-table" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td style="width:35%;">
+                            <span class="field-label">Appointment Date:</span><br>
+                            <b class="field-value">{{ date("d-m-Y",strtotime($label['appointment']['appointment_date'])) }}</b>
+                        </td>
+                        <td style="width:40%;">
+                            <span class="field-label">Time:</span><br>
+                            <b class="field-value">@if($label['appointment']['slot']){{ $label['appointment']['slot']['name'] }}@endif</b>
+                        </td>
+                        <td style="width:25%;float: right;">
+                            <span class="field-label">Area Code:</span><br>
+                            <b class="field-value">@if($label['areacode']){{ $label['areacode'] }} @else - @endif</b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            @endif
+            <div class="address-box">
+                @if($label['appointment']['address_type'] != '2')
+                <span class="field-label">Address:</span>
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td>
+                            @if(!empty($label['area']))Area: <span class="addr-area">{{ $label['area'] }}</span>, @endif 
+                            @if(!empty($label['block']))Block: <b>{{ $label['block'] }}</b>, @endif 
+                            @if(!empty($label['street']))Street: <b>{{ $label['street'] }}</b>, @endif 
+                            @if(!empty($label['avenue']))Avenue: <b>{{ $label['avenue'] }}</b>, @endif 
+                            @if(!empty($label['house_no']))House #: <b>{{ $label['house_no'] }}</b>, @endif 
+                            @if(!empty($label['floor_no']))Floor #: <b>{{ $label['floor_no'] }}</b>, @endif 
+                            @if(!empty($label['flat_no']))Flat #: <b>{{ $label['flat_no'] }}</b>, @endif 
+                            @if(!empty($label['pacii_no']))PACI #: <b>{{ $label['pacii_no'] }}</b>@endif 
+                        </td>
+                    </tr>
+                    @if(!empty($label['landmark']))
+                    <tr>
+                        <td>
+                            Remarks: <b>{{ $label['landmark'] }}</b>
+                        </td>
+                    </tr>
+                    @endif 
+                </table>
+                @else
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td>
+                            Branch: <span class="addr-area">{{ $label['branch']['name'] }}</span>, Time: <b>{{ $label['branch']['morning_branch_time'] }} @if($label['branch']['evening_branch_time'])-{{ $label['branch']['evening_branch_time'] }}@endif</b>
+                            @if(!empty($label['preference']))Preference: <span class="addr-area">{{ $label['preference'] }}</span> @endif 
+                            @if(!empty($label['req_from']))Request from: <span class="addr-area">{{ $label['req_from'] }}</span> @endif 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Remarks: <b>{{ $label['landmark'] }}</b>
+                        </td>
+                    </tr>
+                </table>
+                @endif
+            </div>
+            <div>
+                <table style="max-height: 10px;font-size: 14px;" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    @if(!empty($label['appointment']['agent']))
+                    <tr>
+                        <td class="w-50">
+                            Booked by: <b>{{ ucfirst($label['appointment']['agent']) }}</b>
+                        </td>
+                        <td class="phone w-50">
+                            <img src="data:image/png;base64,{{ $waicon }}" width="12" alt="Logo"> 
+                            94076325
+                        </td>
+                    </tr>
+                    @endif 
+                </table>
+                <table style="font-size: 14px;" width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td class="w-50">www.frontlineexpress.com</td>
+                        <td class="phone w-50">
+                            <img src="data:image/png;base64,{{ $phoneicon }}" width="12" alt="Logo"> 
+                            22070008-22070009-22071001
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        </div>
+    @endforeach
+    </div>
+    </div>
+    @endfor
+</body>
+</html>

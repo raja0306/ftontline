@@ -1,0 +1,1 @@
+<small>{{$net_missed}}</small>
