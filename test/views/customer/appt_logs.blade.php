@@ -62,7 +62,7 @@
                 <td>{{ $appointment->notes }}</td>
                 <td>{{ date('d M, Y H:i A',strtotime($appointment->created_at)) }}</td>
                 <td>{{ $appointment->agent }}</td>
-                <td><a href="{{url('book/customer')}}/{{$appointment->phone_number}}/{{$url}}/{{$appointment->id}}" class="btn btn-sm btn-outline-danger">Edit</a></td>
+                <td>@if($appointment->appointment_date >= date('Y-m-d'))<a href="{{url('book/customer')}}/{{$appointment->phone_number}}/{{$url}}/{{$appointment->id}}" class="btn btn-sm btn-outline-danger">Edit</a>@endif</td>
             </tr>
             @endforeach
         </tbody>
