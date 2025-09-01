@@ -13,6 +13,11 @@
                     @if(App\Menurole::getMenuRole($role_id,2))
                         <li @if($routeName == 'home') class="mm-active" @endif><a href="{{url('/')}}" class="waves-effect"><i class="bx bx-card"></i><span key="t-calendar">Dashboard</span></a></li>
                     @endif
+
+                    @if(App\Menurole::getMenuRole($role_id,38))
+                        <li @if($routeName == 'shipment.dashboard') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/shipment/dashboard')}}" class="waves-effect"><i class="bx bx-layout"></i><span key="t-calendar">Shipment Dashboard</span></a></li>
+                    @endif
+                    
                     @if(App\Menurole::getMenuRole($role_id,21))
                         <li @if($routeName == 'master') class="mm-active" @endif>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -127,9 +132,7 @@
                 @if(App\Menurole::getMenuRole($role_id,32))
                     <li class="menu-title" key="t-menu">Card Shipments</li>
 
-                    @if(App\Menurole::getMenuRole($role_id,38))
-                        <li @if($routeName == 'shipment.dashboard') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/shipment/dashboard')}}" class="waves-effect"><i class="bx bx-layout"></i><span key="t-calendar">Shipment Dashboard</span></a></li>
-                    @endif
+                    
 
                     @if(App\Menurole::getMenuRole($role_id,29))
                         <li @if($routeName == 'uploadshipmentform') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/upload/shipment/')}}" class="waves-effect"><i class="bx bx-task"></i><span key="t-calendar">Shipment Upload</span></a></li>
@@ -155,25 +158,28 @@
                         <li @if($routeName == 'shipment.status' && $_GET['statustype']=='1') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/shipment/status')}}?statustype=1" class="waves-effect"><i class="bx bx-label"></i><span key="t-calendar">Dispatch</span></a></li>
                     @endif
 
-                    @if(App\Menurole::getMenuRole($role_id,36))
-                        <li @if($routeName == 'shipment.status' && $_GET['statustype']=='2') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/shipment/status')}}?statustype=2" class="waves-effect"><i class="bx bx-archive-out"></i><span key="t-calendar">Out of Delivery</span></a></li>
-                    @endif
-
-                    @if(App\Menurole::getMenuRole($role_id,40))
-                        <li @if($routeName == 'deliverylist') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('delivery/list')}}?statustype=2" class="waves-effect"><i class="bx bxs-spreadsheet"></i><span key="t-calendar">Run Sheet</span></a></li>
-                    @endif
-
-                    @if(App\Menurole::getMenuRole($role_id,35))
-                        <li @if($routeName == 'shipment.status' && $_GET['statustype']=='3') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/shipment/status')}}?statustype=3" class="waves-effect"><i class="bx bx-area"></i><span key="t-calendar">Renconcilation</span></a></li>
-                    @endif
+                    
 
                 @endif
 
                 @if(App\Menurole::getMenuRole($role_id,45))
                     <li class="menu-title" key="t-menu">E-commerce</li>
                     @if(App\Menurole::getMenuRole($role_id,44))
-                        <li @if($routeName == 'pickuprequest') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/pickuprequest/')}}" class="waves-effect"><i class="bx bx-git-pull-request"></i><span key="t-calendar">Pickup Request</span></a></li>
+                        <li @if($routeName == 'pickuprequest') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/pickuprequest/')}}" class="waves-effect"><i class="mdi mdi-car-arrow-left"></i><span key="t-calendar">Pickup Request</span></a></li>
                     @endif
+                @endif
+
+                <li class="menu-title" key="t-menu">Shipments Status</li>
+                @if(App\Menurole::getMenuRole($role_id,36))
+                        <li @if($routeName == 'shipment.status' && $_GET['statustype']=='2') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/shipment/status')}}?statustype=2" class="waves-effect"><i class="bx bx-archive-out"></i><span key="t-calendar">Out of Delivery</span></a></li>
+                    @endif
+
+                @if(App\Menurole::getMenuRole($role_id,40))
+                    <li @if($routeName == 'deliverylist') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('delivery/list')}}?statustype=2" class="waves-effect"><i class="bx bxs-spreadsheet"></i><span key="t-calendar">Run Sheet</span></a></li>
+                @endif
+
+                @if(App\Menurole::getMenuRole($role_id,35))
+                    <li @if($routeName == 'shipment.status' && $_GET['statustype']=='3') class="mm-active gm_user" @else class="gm_user" @endif><a href="{{url('/shipment/status')}}?statustype=3" class="waves-effect"><i class="bx bx-area"></i><span key="t-calendar">Renconcilation</span></a></li>
                 @endif
 
                 @if(App\Menurole::getMenuRole($role_id,15))

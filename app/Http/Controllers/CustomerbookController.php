@@ -57,7 +57,7 @@ class CustomerbookController extends Controller
 
       $lead = \App\VicidialList::where('lead_id',$leadid)->first();
 
-      $shipments = Shipment::where('consignee_phone_upload',$mobile)->where('appointment_id','0')->whereIn('cstatus',["inscan_at_hub","New","COURIER RETURN"])->get();
+      $shipments = Shipment::where('consignee_phone_upload',$mobile)->where('appointment_id','0')->whereIn('cstatus',["inscan_at_hub","New","COURIER RETURN","softdata_upload"])->get();
 
       $appoint = null;
       if($appid!=0){
@@ -123,7 +123,7 @@ class CustomerbookController extends Controller
       if($req->edit_id>0){ 
          Appointment::where('id',$req->edit_id)->update(['delete_status'=>1]); 
       }
-
+      $phone = substr($req->phone_number, -8);
       foreach ($wa_shipment_ids as $shipment_id) {
           $ship=Shipment::find($shipment_id);
 
@@ -133,6 +133,8 @@ class CustomerbookController extends Controller
                   if($apmt->address_type!=2){
 
                      //SendWhatsappAppointment::dispatch('98090263',$ship->consignee_name,date('d M,Y',strtotime($apmt->appointment_date)),$apmt->slot->name,$apmt->area->name,$apmt->useraddress->block,$apmt->useraddress->street,$apmt->useraddress->house_no,$apmt->useraddress->floor_no,$apmt->useraddress->flat_no,$apmt->useraddress->landmark,$ship->barcode);
+
+                     //SendWhatsappAppointment::dispatch($phone,$ship->consignee_name,date('d M,Y',strtotime($apmt->appointment_date)),$apmt->slot->name,$apmt->area->name,$apmt->useraddress->block,$apmt->useraddress->street,$apmt->useraddress->house_no,$apmt->useraddress->floor_no,$apmt->useraddress->flat_no,$apmt->useraddress->landmark,$ship->barcode);
 
                   }
                }

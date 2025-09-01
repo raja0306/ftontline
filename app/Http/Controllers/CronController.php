@@ -25,7 +25,7 @@ class CronController extends Controller
    public function cronmissed()
   {
     $todate1 = date('Y-m-d H:i:s');
-    $fromdate = date('Y-m-d H:i:s', strtotime("-10 minutes", strtotime($todate1)));
+    $fromdate = date('Y-m-d H:i:s', strtotime("-30 minutes", strtotime($todate1)));
     $reset_count=0;
     $leads='';
     $mstatus = \App\Settings::getColumn('name','missed','nameval');
@@ -38,20 +38,17 @@ class CronController extends Controller
         $already = \App\VicidialList::where('phone_number',$dial_log->phone_number)->where('list_id',$li)->where('status','NEW')->count();
         $miss = \App\VicidialCloserLog::NetMissed($dial_log->phone_number,$dial_log->call_date);
                 
-      if($already==0 && $miss=="Net Missed"){
-          $reset_count++;
+        if($already==0 && $miss=="Net Missed"){
+            $reset_count++;
             self::insertleadmissedlist($dial_log->phone_number);
               $leads='';
-      }
+        }
       
-  }
-  $lilog = $reset_count."Cron Missed call reset Uploaded".$leads;
+      }
+      $lilog = $reset_count."Cron Missed call reset Uploaded".$leads;
 
-  //print_r($lilog); exit();
-
-  DB::table('lists_log')->insert(['log' => $lilog,'listid' => $li,'userid' => 1]);
-
-  return true;
+      DB::table('lists_log')->insert(['log' => $lilog,'listid' => $li,'userid' => 1]);
+      return true;
   }
 
   public function insertleadmissedlist($mobile)
